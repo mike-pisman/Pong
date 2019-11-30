@@ -15,7 +15,7 @@
     <canvas id="gameCanvas"></canvas>
     <script type="text/javascript">
 
-        const WINNING_SCORE = 5;
+        const WINNING_SCORE = 2;
         var acceleration = 1.5;
 
         var canvas, ctx;
@@ -26,16 +26,20 @@
         var height;
         var player2_speed;
         var framesPerSecond = 60;
-        var time = framesPerSecond*3;
+        var time = framesPerSecond*4;
 
         var score1 = 0, score2 = 0;
         var showScore = false;
         var ballRadius;
+        var sound_played = false;
 
-        var snd_win = new Audio("/Sounds/win.wav");
-        var snd_lose = new Audio("/Sounds/lose.wav");
+        var snd_win = new Audio("Sounds/win.wav");
+        var snd_lose = new Audio("Sounds/lose.wav");
         var snd_left = new Audio("Sounds/left.wav");
         var snd_right = new Audio("Sounds/right.wav");
+        var snd_timer = new Audio("Sounds/timer.wav");
+        var snd_go = new Audio("Sounds/go.wav");
+        var timer = ["GO!", "1", "2", "3"];
 
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
@@ -47,7 +51,6 @@
             ball_y = canvas.height/2;
             player1_y = canvas.height/2;
             player2_y = canvas.height/2;
-            player2_speed = canvas.height/50;
 
           	setInterval(function() {
                 scaleWindow();
@@ -67,7 +70,7 @@
             height = (canvas.height - 20)/10;
             ballRadius = canvas.height/75;
             ballSpeed = (canvas.height / 100) * acceleration;
-            player2_speed = canvas.height/75;
+            player2_speed = canvas.height/200;
 
         	if(showScore) {
         		return;
@@ -151,12 +154,16 @@
                 ctx.textAlign = "center";
 
         		if(score1 >= WINNING_SCORE) {
-                    snd_win.play();
+                    if(!sound_played)
+                        snd_win.play();
+                    sound_played = true;
                     ctx.fillStyle = "#81db89";
         			ctx.fillText("You Win", canvas.width/2, canvas.height/2 - canvas.height/20);
                 }
                 else if(score2 >= WINNING_SCORE){
-                    snd_lose.play();
+                    if(!sound_played)
+                        snd_lose.play();
+                    sound_played = true;
                     ctx.fillStyle = "#db8781";
         			ctx.fillText("You Lose", canvas.width/2, canvas.height/2 - canvas.height/20);
                 }
@@ -187,10 +194,15 @@
             	drawCircle(ball_x, ball_y, ballRadius, 'grey');
 
                 if(time > 0) {
+                    if(time/framesPerSecond == Math.ceil(time/framesPerSecond))
+                        if(Math.ceil(time/framesPerSecond) - 1 > 0)
+                            snd_timer.play();
+                        else
+                            snd_go.play();
                     ctx.font = "" + canvas.height/4 + "px VT323";
                     ctx.textAlign = "center";
                     ctx.fillStyle = "black"
-                    ctx.fillText(Math.ceil(time/framesPerSecond), canvas.width/2, canvas.height/2 + canvas.height/25);
+                    ctx.fillText(timer[Math.ceil(time/framesPerSecond) - 1], canvas.width/2, canvas.height/2 + canvas.height/25);
                 }
             }
         }
@@ -211,13 +223,14 @@
         		score2 = 0;
         		showScore = false;
                 ballSpeed = 10;
+                sound_played = false;
         	}
         }
         function ballReset() {
         	if(score1 >= WINNING_SCORE || score2 >= WINNING_SCORE)
         		showScore = true;
 
-                time = framesPerSecond * 3;
+                time = framesPerSecond * 4;
 
                 acceleration = 1.5;
                 ballSpeed = (canvas.height / 100) * acceleration;
