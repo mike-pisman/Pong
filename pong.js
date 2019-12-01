@@ -142,6 +142,8 @@ function draw() {
             sound_played = true;
             ctx.fillStyle = "#81db89";
             ctx.fillText("You Win", canvas.width/2, canvas.height/2 - canvas.height/20);
+            update();
+            drawConfetti();
         }
         else if(score2 >= WINNING_SCORE){
             if(!sound_played)
