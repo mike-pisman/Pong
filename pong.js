@@ -11,7 +11,7 @@ var player2_speed;
 var framesPerSecond = 60;
 var time = framesPerSecond*4;
 
-var score1 = 0, score2 = 0;
+var score1 = 1, score2 = 0;
 var showScore = false;
 var ballRadius;
 var sound_played = false;
