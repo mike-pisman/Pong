@@ -1,56 +1,52 @@
 
-let pieces = [];
-let numberOfPieces = 50;
+var pieces = [];
+var numberOfPieces = 50;
+
+/*function createConfetti() {
+    while (pieces.length < numberOfPieces) {
+        pieces.push(new Piece(Math.random() * canvas.width, 0));
+    }
+}*/
 
 function randomColor () {
-    let colors = ['#f00', '#0f0', '#00f', '#0ff', '#f0f', '#ff0'];
+    var colors = ['#f00', '#0f0', '#00f', '#0ff', '#f0f', '#ff0'];
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-function update () {
+function drawConfetti () {
 
-    for (let i = pieces.length - 1; i >= 0; i--) {
-        let p = pieces[i];
+    while (pieces.length < numberOfPieces) {
+        pieces.push(new Piece(Math.random() * canvas.width, -20));
+    }
+
+    for (var i = 0; i < pieces.length; i++) {
+        var p = pieces[i];
 
         if (p.y > canvas.height) {
             pieces.splice(i, 1);
             continue;
         }
 
-        p.y += p.gravity * dt;
-        p.rotation += p.rotationSpeed * dt;
-    }
-
-
-    while (pieces.length < numberOfPieces) {
-        pieces.push(new Piece(Math.random() * canvas.width, -20));
-    }
-}
-
-function drawConfetti () {
-
-    pieces.forEach(function (p) {
+        p.y += p.gravity;
+        p.rotation += p.rotationSpeed;
 
         ctx.fillStyle = p.color;
 
-        ctx.translate(p.x + p.size / 2, p.y + p.size / 2);
-        ctx.rotate(p.rotation);
-
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-
-    });
+        ctx.beginPath();
+            ctx.moveTo(p.x - p.size/8 * Math.cos(p.rotation), p.y - p.size/2 * Math.sin(p.rotation));
+            ctx.lineTo(p.x + p.size/8 * Math.cos(p.rotation), p.y - p.size/2 * Math.sin(p.rotation));
+            ctx.lineTo(p.x + p.size/8 * Math.cos(p.rotation), p.y + p.size/2 * Math.sin(p.rotation));
+            ctx.lineTo(p.x - p.size/8 * Math.cos(p.rotation), p.y + p.size/2 * Math.sin(p.rotation));
+        ctx.fill();
+    }
 }
 
 function Piece (x, y) {
     this.x = x;
     this.y = y;
-    this.size = (Math.random() * 0.5 + 0.75) * 15;
+    this.size = Math.random() * 10;
     this.gravity = (Math.random() * 0.5 + 0.75) * 0.1;
-    this.rotation = (Math.PI * 2) * Math.random();
-    this.rotationSpeed = (Math.PI * 2) * (Math.random() - 0.5) * 0.001;
+    this.rotation = 0; //(Math.PI * 2) * Math.random() / 2;
+    this.rotationSpeed = .1; //(Math.PI * 2) * (Math.random() - 0.5) * 0.001;
     this.color = randomColor();
-}
-
-while (pieces.length < numberOfPieces) {
-    pieces.push(new Piece(Math.random() * canvas.width, Math.random() * canvas.height));
 }

@@ -11,7 +11,7 @@ var player2_speed;
 var framesPerSecond = 60;
 var time = framesPerSecond*4;
 
-var score1 = 1, score2 = 0;
+var score1 = 2, score2 = 0;
 var showScore = false;
 var ballRadius;
 var sound_played = false;
@@ -28,6 +28,7 @@ window.onload = function() {
     canvas = document.getElementById('gameCanvas');
     ctx = canvas.getContext('2d');
     scaleWindow();
+    //createConfetti();
 
     ballRadius = canvas.height/75;
     ball_x = canvas.width/2;
@@ -136,13 +137,15 @@ function draw() {
         ctx.font = "" + canvas.height/10 + "px VT323";
         ctx.textAlign = "center";
 
+        ctx.fillStyle = 'grey';
+        ctx.fillText("Click to Continue", canvas.width/2, canvas.height/2 + canvas.height/20);
+
         if(score1 >= WINNING_SCORE) {
             if(!sound_played)
                 snd_win.play();
             sound_played = true;
             ctx.fillStyle = "#81db89";
             ctx.fillText("You Win", canvas.width/2, canvas.height/2 - canvas.height/20);
-            update();
             drawConfetti();
         }
         else if(score2 >= WINNING_SCORE){
@@ -153,8 +156,6 @@ function draw() {
             ctx.fillText("You Lose", canvas.width/2, canvas.height/2 - canvas.height/20);
         }
 
-        ctx.fillStyle = 'grey';
-        ctx.fillText("Click to Continue", canvas.width/2, canvas.height/2 + canvas.height/20);
         return;
     }
     else {
